@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lecce Tour Test</title>
+<meta name="theme-color" content="#f3e9d2">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root {
+    --stone: #f3e9d2;      /* pietra leccese */
+    --stone-deep: #e6d7b6;
+    --card: #fffaf0;
+    --ink: #1f1a14;
+    --ink-soft: #5c5244;
+    --line: #cdbb94;
+    --accent: #a8401f;     /* terracotta */
+    --accent-ink: #ffffff;
+    --good: #2f6b3a;
+    --flag: #a8401f;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--stone); color: var(--ink);
+    font: 17px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    overscroll-behavior-y: none;
+  }
+  button, input, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; touch-action: manipulation; }
+  [hidden] { display: none !important; }
+
+  .app { display: flex; flex-direction: column; height: 100dvh; max-width: 560px; margin: 0 auto; }
+
+  /* ---------- header ---------- */
+  .top {
+    display: flex; align-items: center; gap: 10px;
+    padding: calc(8px + env(safe-area-inset-top)) 14px 8px;
+  }
+  .top .count { font-size: 15px; color: var(--ink-soft); font-variant-numeric: tabular-nums; flex: 1; }
+  .top .count b { color: var(--ink); }
+  .pill-btn {
+    min-height: 44px; padding: 0 16px; border-radius: 22px;
+    border: 1.5px solid var(--ink); background: transparent; font-weight: 600; font-size: 15px;
+  }
+  .bar { height: 5px; background: var(--stone-deep); margin: 0 14px; border-radius: 3px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .2s; }
+
+  .title { padding: 14px 16px 10px; display: flex; gap: 12px; align-items: flex-start; }
+  .title .num {
+    font: 700 46px/0.95 Georgia, "Times New Roman", serif; color: var(--accent);
+    min-width: 54px; font-variant-numeric: lining-nums;
+  }
+  .title h1 { margin: 2px 0 0; font-size: 21px; line-height: 1.22; font-weight: 650; overflow-wrap: anywhere; }
+  .title .state { display: block; margin-top: 4px; font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-soft); }
+  .title .state.ok { color: var(--good); }
+  .title .state.flag { color: var(--flag); }
+
+  /* ---------- form ---------- */
+  .scroll { flex: 1; overflow-y: auto; padding: 0 12px 16px; -webkit-overflow-scrolling: touch; }
+  .field {
+    background: var(--card); border: 1.5px solid var(--line); border-radius: var(--radius);
+    margin-bottom: 10px;
+  }
+  .toggle {
+    display: flex; align-items: center; gap: 14px; width: 100%; text-align: left;
+    min-height: 64px; padding: 10px 14px; border: 0; background: transparent; border-radius: var(--radius);
+    font-size: 18px; font-weight: 600;
+  }
+  .toggle .box {
+    flex: none; width: 34px; height: 34px; border-radius: 9px; border: 2px solid var(--ink);
+    display: grid; place-items: center; font-size: 22px; font-weight: 800; color: transparent; background: #fff;
+  }
+  .field.on { border-color: var(--accent); background: #fbe9df; }
+  .field.on .toggle .box { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .step { padding: 10px 14px 12px; }
+  .step label { display: block; font-size: 18px; font-weight: 600; }
+  .step .hint { font-size: 14px; color: var(--ink-soft); font-weight: 400; }
+  .step .row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+  .step .row button {
+    flex: none; width: 64px; height: 56px; border-radius: 12px; border: 2px solid var(--ink);
+    background: #fff; font-size: 30px; font-weight: 700; line-height: 1;
+  }
+  .step .row button:active, .toggle:active, .nav button:active { transform: scale(.97); }
+  .step .val { flex: 1; display: flex; align-items: baseline; justify-content: center; gap: 6px; }
+  .step .val input {
+    width: 4.2ch; border: 0; border-bottom: 2px solid var(--line); background: transparent; text-align: center;
+    font: 700 32px/1.1 system-ui, sans-serif; font-variant-numeric: tabular-nums; padding: 0; border-radius: 0;
+    -moz-appearance: textfield;
+  }
+  .step .val input::-webkit-outer-spin-button, .step .val input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .step .val span { font-size: 17px; color: var(--ink-soft); min-width: 2.2ch; }
+  .step .clear {
+    flex: none; width: auto !important; height: 56px; padding: 0 12px; font-size: 14px !important;
+    border-color: var(--line) !important; color: var(--ink-soft);
+  }
+
+  .notes { padding: 10px 14px 12px; }
+  .notes label { display: block; font-size: 18px; font-weight: 600; }
+  .notes textarea {
+    display: block; width: 100%; min-height: 96px; margin-top: 8px; padding: 10px 12px; resize: vertical;
+    border: 1.5px solid var(--line); border-radius: 10px; background: #fff; font-size: 17px; line-height: 1.35;
+  }
+  .notes .sub { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 8px; }
+  .notes .sub small { color: var(--ink-soft); font-size: 13px; }
+  .ghost { min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1.5px solid var(--line); background: #fff; font-size: 15px; font-weight: 600; white-space: nowrap; }
+  :focus-visible { outline: 3px solid #1a5fb4; outline-offset: 2px; }
+
+  /* ---------- bottom nav ---------- */
+  .nav {
+    display: flex; gap: 10px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    background: var(--stone); border-top: 1.5px solid var(--line);
+  }
+  .nav button { height: 62px; border-radius: 14px; font-size: 19px; font-weight: 700; }
+  .nav .prev { flex: none; width: 92px; border: 2px solid var(--ink); background: transparent; }
+  .nav .prev:disabled { opacity: .3; }
+  .nav .next { flex: 1; border: 0; background: var(--ink); color: #fff; }
+  .nav .next.good { background: var(--good); }
+
+  /* ---------- list / export sheet ---------- */
+  .sheet { position: fixed; inset: 0; background: var(--stone); display: flex; flex-direction: column; max-width: 560px; margin: 0 auto; z-index: 5; }
+  .sheet .top h2 { flex: 1; margin: 0; font-size: 20px; }
+  .sheet .body { flex: 1; overflow-y: auto; padding: 0 12px calc(20px + env(safe-area-inset-bottom)); }
+  .summary { font-size: 15px; color: var(--ink-soft); padding: 2px 4px 10px; }
+  .summary b { color: var(--ink); }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .actions .big { grid-column: 1 / -1; min-height: 56px; border: 0; border-radius: 12px; background: var(--ink); color: #fff; font-size: 18px; font-weight: 700; }
+  .actions .ghost { min-height: 50px; white-space: normal; }
+  .msg { min-height: 22px; font-size: 14px; color: var(--good); font-weight: 600; padding: 0 4px 6px; }
+  .units { display: flex; align-items: center; gap: 10px; padding: 6px 4px 12px; font-size: 15px; }
+  .seg { display: inline-flex; border: 1.5px solid var(--ink); border-radius: 10px; overflow: hidden; }
+  .seg button { min-height: 44px; min-width: 76px; border: 0; background: transparent; font-weight: 600; font-size: 15px; }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .list { list-style: none; margin: 0; padding: 0; }
+  .list li button {
+    display: flex; align-items: flex-start; gap: 10px; width: 100%; text-align: left; min-height: 52px;
+    padding: 10px 10px; border: 0; border-bottom: 1px solid var(--line); background: transparent; font-size: 16px;
+  }
+  .list .dot { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; font-size: 14px; font-weight: 800; color: #fff; margin-top: 1px; }
+  .list .ok .dot { background: var(--good); border-color: var(--good); }
+  .list .flag .dot { background: var(--flag); border-color: var(--flag); }
+  .list .name { flex: 1; overflow-wrap: anywhere; }
+  .list .detail { display: block; font-size: 13.5px; color: var(--flag); font-weight: 600; margin-top: 2px; }
+  .list .cur button { background: var(--stone-deep); }
+  .danger { margin: 22px 0 6px; width: 100%; min-height: 48px; border-radius: 10px; border: 1.5px solid var(--flag); color: var(--flag); background: transparent; font-weight: 600; font-size: 15px; }
+  .foot { font-size: 13px; color: var(--ink-soft); padding: 6px 4px; }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="top">
+    <div class="count" id="count"></div>
+    <button class="pill-btn" id="openList">All tracks</button>
+  </div>
+  <div class="bar"><i id="bar"></i></div>
+
+  <div class="title">
+    <div class="num" id="num"></div>
+    <div>
+      <h1 id="name"></h1>
+      <span class="state" id="state"></span>
+    </div>
+  </div>
+
+  <div class="scroll" id="scroll">
+    <div class="field" id="f-nt">
+      <button class="toggle" data-toggle="nt" aria-pressed="false"><span class="box">✕</span>Audio did not trigger</button>
+    </div>
+
+    <div class="field step" id="f-late">
+      <label for="i-late">Audio late <span class="hint">· move it back by</span></label>
+      <div class="row">
+        <button data-step="late" data-dir="-1" aria-label="Less">−</button>
+        <div class="val"><input id="i-late" data-num="late" type="number" inputmode="numeric" min="0" placeholder="0"><span data-unit></span></div>
+        <button data-step="late" data-dir="1" aria-label="More">+</button>
+      </div>
+    </div>
+
+    <div class="field step" id="f-early">
+      <label for="i-early">Audio early <span class="hint">· move it forward by</span></label>
+      <div class="row">
+        <button data-step="early" data-dir="-1" aria-label="Less">−</button>
+        <div class="val"><input id="i-early" data-num="early" type="number" inputmode="numeric" min="0" placeholder="0"><span data-unit></span></div>
+        <button data-step="early" data-dir="1" aria-label="More">+</button>
+      </div>
+    </div>
+
+    <div class="field step" id="f-long">
+      <label for="i-long">Audio too long <span class="hint">· shorten by</span></label>
+      <div class="row">
+        <button data-step="long" data-dir="-1" aria-label="Less">−</button>
+        <div class="val"><input id="i-long" data-num="long" type="number" inputmode="numeric" min="0" placeholder="0"><span>sec</span></div>
+        <button data-step="long" data-dir="1" aria-label="More">+</button>
+      </div>
+    </div>
+
+    <div class="field" id="f-unclear">
+      <button class="toggle" data-toggle="unclear" aria-pressed="false"><span class="box">✕</span>Directions unclear</button>
+    </div>
+
+    <div class="field notes">
+      <label for="notes">Notes</label>
+      <textarea id="notes" placeholder="Tap here, then the keyboard's microphone to dictate"></textarea>
+      <div class="sub">
+        <small id="gpsMsg"></small>
+        <button class="ghost" id="gps">Add my GPS position</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="prev" id="prev">‹ Back</button>
+    <button class="next" id="next"></button>
+  </div>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="top">
+    <h2>All tracks</h2>
+    <button class="pill-btn" id="closeList">Close</button>
+  </div>
+  <div class="body">
+    <div class="summary" id="summary"></div>
+    <div class="actions">
+      <button class="big" id="share">Send results file</button>
+      <button class="ghost" id="download">Save file to phone</button>
+      <button class="ghost" id="copy">Copy issues as text</button>
+    </div>
+    <div class="msg" id="msg" role="status"></div>
+    <div class="units">Distances in
+      <span class="seg">
+        <button data-units="m">metres</button>
+        <button data-units="ft">feet</button>
+      </span>
+    </div>
+    <ul class="list" id="list"></ul>
+    <button class="danger" id="reset">Erase all entries</button>
+    <div class="foot" id="offline">Checking offline status…</div>
+    <div class="foot">Entries are saved on this phone as you tap. Send or save the file now and then as a backup.</div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const TOUR = 'The southern lady of Baroque (Lecce)';
+const TRACKS = [
+  "1. Start - porta Napoli",
+  "2. Head straight into via principe di Savoia",
+  "3. Turn left - st maria della provvidenxa",
+  "4. Continue straight on Vico Dei Paleoli",
+  "5. Right onto piazza Addolorata - Sant Angelo",
+  "6. Straight through the square: Piazzetta SS. Addolorata",
+  "7. Continue along via Manfredi",
+  "8. Turn left into Piazzetta Chiesa Greca",
+  "9. San Nicolo dei Greci",
+  "10. Right onto via Ferrant D'aragona",
+  "11. Left then right onto via 25 luglio",
+  "12. Right through the archway - Palazzo Celestini",
+  "13. Turn left onto Via Umberto I",
+  "14. Santa Croce and Medieval Jewsish Lecce",
+  "15. Continue straight into Via Templari",
+  "16. Piazza Sant Oronzo",
+  "17. Amphitheatre: Anfiteatro Romano di Lecce",
+  "18. Turn Left out of Piazza Sant Oronzo and into via Giusepep Verdi",
+  "19. Right - Parco Vittorio emanuele",
+  "20. Continue straight into via degli Ammirati - Santa Chiara",
+  "21. Piazza Orsinii Roman theatre",
+  "22. Teatro Romano",
+  "23. Turn right behind the duomo",
+  "24. Turn left onto Via Vittorio Emenuele II",
+  "25. Turn left into piazza duomo",
+  "26. Piazza Duomo 1",
+  "27. Piazza Duomo 2",
+  "28. Piazza Duomo 3",
+  "29. Turn Left onto Via Giuseppe Libertini",
+  "30. Continue down via Giuseppe Libertini",
+  "31. Turn left onto vicolo Santa Venera",
+  "32. Turn left into via Marco Basseo",
+  "33. Slight left to stay on via Marco Basseo",
+  "34. Continue straight into via Palazzo dei conti di lecce",
+  "35. Continue straight through Piazzetta Giuseppe Pellegrino",
+  "36. Turn right - church of San Matteo",
+  "37. Policastro Boutique Hotel",
+  "38. Turn left onto via Ascanio Grandi - Museo Faggiano",
+  "39. Museo Faggiano",
+  "40. Greek Orthodox church of San Nicolo",
+  "41. Turn right - Sant'Antonio",
+  "42. Turn left - Castle view",
+  "43. Cross onto Via XXV Luglio",
+  "44. End of Tour: The Castle"
+];
+const KEY = 'lecce-tour-test-v1';
+const $ = id => document.getElementById(id);
+const blank = () => ({ nt: false, late: 0, early: 0, long: 0, unclear: false, notes: '', ok: false, ts: '' });
+
+/* ---------- state ---------- */
+let S = { cur: 0, units: 'm', rows: TRACKS.map(blank) };
+let memOnly = false;
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d && Array.isArray(d.rows)) {
+      S.rows = TRACKS.map((_, i) => Object.assign(blank(), d.rows[i] || {}));
+      S.cur = Math.min(Math.max(d.cur | 0, 0), TRACKS.length - 1);
+      S.units = d.units === 'ft' ? 'ft' : 'm';
+    }
+  } catch (e) { memOnly = true; }
+}
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(S)); memOnly = false; }
+  catch (e) { memOnly = true; }
+}
+const hasData = r => r.nt || r.late > 0 || r.early > 0 || r.long > 0 || r.unclear || r.notes.trim() !== '';
+const status = r => hasData(r) ? 'flag' : (r.ok ? 'ok' : 'todo');
+const split = t => { const m = t.match(/^(\d+)\.\s*(.*)$/); return m ? [m[1], m[2]] : ['', t]; };
+function touch(r) { r.ts = new Date().toISOString(); }
+
+/* ---------- track view ---------- */
+function render() {
+  const r = S.rows[S.cur], [n, nm] = split(TRACKS[S.cur]);
+  $('num').textContent = n;
+  $('name').textContent = nm;
+  const done = S.rows.filter(x => status(x) !== 'todo').length;
+  $('count').innerHTML = 'Track <b>' + (S.cur + 1) + '</b> of ' + TRACKS.length + ' · ' + done + ' checked';
+  $('bar').style.width = (done / TRACKS.length * 100) + '%';
+  document.querySelectorAll('[data-unit]').forEach(e => e.textContent = S.units);
+  for (const k of ['nt', 'unclear']) {
+    $('f-' + k).classList.toggle('on', r[k]);
+    $('f-' + k).querySelector('button').setAttribute('aria-pressed', r[k]);
+  }
+  for (const k of ['late', 'early', 'long']) {
+    $('f-' + k).classList.toggle('on', r[k] > 0);
+    const inp = $('i-' + k);
+    if (document.activeElement !== inp) inp.value = r[k] > 0 ? r[k] : '';
+  }
+  if (document.activeElement !== $('notes')) $('notes').value = r.notes;
+  renderState();
+}
+function renderState() {
+  const r = S.rows[S.cur], st = status(r), last = S.cur === TRACKS.length - 1;
+  const el = $('state');
+  el.className = 'state ' + st;
+  el.textContent = st === 'flag' ? 'Issue recorded' : st === 'ok' ? 'Checked · all good' : 'Not checked yet';
+  const nx = $('next'), flagged = st === 'flag';
+  nx.classList.toggle('good', !flagged);
+  nx.textContent = flagged ? (last ? 'Save · finish' : 'Save · next ›') : (last ? 'All good · finish' : 'All good · next ›');
+  $('prev').disabled = S.cur === 0;
+  $('gpsMsg').textContent = memOnly ? 'Warning: this browser is not saving entries.' : '';
+}
+function go(i) {
+  S.cur = Math.min(Math.max(i, 0), TRACKS.length - 1);
+  save(); render(); $('scroll').scrollTop = 0;
+}
+
+document.querySelectorAll('[data-toggle]').forEach(b => b.addEventListener('click', () => {
+  const r = S.rows[S.cur], k = b.dataset.toggle;
+  r[k] = !r[k]; touch(r); save(); render();
+}));
+const stepSize = k => k === 'long' ? 5 : (S.units === 'ft' ? 10 : 5);
+document.querySelectorAll('[data-step]').forEach(b => b.addEventListener('click', () => {
+  const r = S.rows[S.cur], k = b.dataset.step;
+  document.activeElement && document.activeElement.blur();
+  r[k] = Math.max(0, (r[k] || 0) + stepSize(k) * Number(b.dataset.dir));
+  touch(r); save(); render();
+}));
+document.querySelectorAll('[data-num]').forEach(inp => {
+  inp.addEventListener('input', () => {
+    const r = S.rows[S.cur], k = inp.dataset.num, v = Math.round(Number(inp.value));
+    r[k] = isFinite(v) && v > 0 ? v : 0;
+    touch(r); save();
+    $('f-' + k).classList.toggle('on', r[k] > 0); renderState();
+  });
+  inp.addEventListener('blur', render);
+});
+$('notes').addEventListener('input', () => {
+  const r = S.rows[S.cur]; r.notes = $('notes').value; touch(r); save(); renderState();
+});
+$('prev').addEventListener('click', () => go(S.cur - 1));
+$('next').addEventListener('click', () => {
+  const r = S.rows[S.cur];
+  if (!hasData(r)) { r.ok = true; touch(r); }
+  if (S.cur === TRACKS.length - 1) { save(); render(); openList(); }
+  else go(S.cur + 1);
+});
+$('gps').addEventListener('click', () => {
+  const m = $('gpsMsg'), idx = S.cur;
+  if (!navigator.geolocation) { m.textContent = 'GPS not available here.'; return; }
+  m.textContent = 'Finding position…';
+  navigator.geolocation.getCurrentPosition(p => {
+    const r = S.rows[idx];
+    const txt = 'GPS ' + p.coords.latitude.toFixed(5) + ', ' + p.coords.longitude.toFixed(5) + ' (±' + Math.round(p.coords.accuracy) + ' m)';
+    r.notes = (r.notes.trim() ? r.notes.replace(/\s+$/, '') + ' ' : '') + txt;
+    touch(r); save();
+    if (idx === S.cur) { $('notes').value = r.notes; renderState(); }
+    m.textContent = 'Position added.';
+  }, e => { m.textContent = e.code === 1 ? 'Location permission was denied.' : 'Could not get a position.'; },
+  { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 });
+});
+
+/* ---------- list + export ---------- */
+function dist(v) { return v > 0 ? v + (S.units === 'ft' ? 'ft' : 'm') : ''; }
+function detail(r) {
+  const p = [];
+  if (r.nt) p.push('did not trigger');
+  if (r.late > 0) p.push('late, move back ' + dist(r.late));
+  if (r.early > 0) p.push('early, move forward ' + dist(r.early));
+  if (r.long > 0) p.push('too long, shorten by ' + r.long + 's');
+  if (r.unclear) p.push('directions unclear');
+  if (r.notes.trim()) p.push('“' + r.notes.trim() + '”');
+  return p.join(' · ');
+}
+function renderList() {
+  const ul = $('list'); ul.textContent = '';
+  let ok = 0, flag = 0;
+  S.rows.forEach((r, i) => {
+    const st = status(r); if (st === 'ok') ok++; if (st === 'flag') flag++;
+    const li = document.createElement('li'); li.className = st + (i === S.cur ? ' cur' : '');
+    const b = document.createElement('button');
+    const dot = document.createElement('span'); dot.className = 'dot'; dot.textContent = st === 'ok' ? '✓' : st === 'flag' ? '!' : '';
+    const nm = document.createElement('span'); nm.className = 'name'; nm.textContent = TRACKS[i];
+    if (st === 'flag') { const d = document.createElement('span'); d.className = 'detail'; d.textContent = detail(r); nm.appendChild(d); }
+    b.append(dot, nm);
+    b.addEventListener('click', () => { closeList(); go(i); });
+    li.appendChild(b); ul.appendChild(li);
+  });
+  $('summary').innerHTML = '<b>' + flag + '</b> with issues · <b>' + ok + '</b> all good · <b>' + (TRACKS.length - ok - flag) + '</b> not checked';
+  document.querySelectorAll('[data-units]').forEach(b => b.setAttribute('aria-pressed', b.dataset.units === S.units));
+}
+function openList() { resetArmed = false; $('reset').textContent = 'Erase all entries'; $('msg').textContent = ''; renderList(); $('sheet').hidden = false; const c = $('list').querySelector('.cur'); c && c.scrollIntoView({ block: 'center' }); }
+function closeList() { $('sheet').hidden = true; }
+$('openList').addEventListener('click', openList);
+$('closeList').addEventListener('click', () => { closeList(); render(); });
+document.querySelectorAll('[data-units]').forEach(b => b.addEventListener('click', () => { S.units = b.dataset.units; save(); renderList(); render(); }));
+
+function csv() {
+  const q = v => '"' + String(v).replace(/"/g, '""') + '"';
+  const head = ['TRACK NAME OR LOCATION', 'AUDIO DID NOT TRIGGER', 'AUDIO LATE MOVE BACK (feet / metres)',
+    'AUDIO EARLY MOVE FORWARD (feet / metres)', 'AUDIO TOO LONG SHORTEN BY (seconds)',
+    'DIRECTIONS UNCLEAR (mark with X)', 'NOTES', 'TESTED'];
+  const lines = [head.map(q).join(',')];
+  S.rows.forEach((r, i) => {
+    const st = status(r);
+    lines.push([TRACKS[i], r.nt ? 'X' : '', dist(r.late), dist(r.early), r.long > 0 ? r.long : '',
+      r.unclear ? 'X' : '', r.notes.trim().replace(/\r?\n/g, ' '), st === 'todo' ? '' : 'yes'].map(q).join(','));
+  });
+  return '﻿' + lines.join('\r\n') + '\r\n';
+}
+function fileName() {
+  const d = new Date(), p = n => String(n).padStart(2, '0');
+  return 'lecce-voicemap-test-' + d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + '-' + p(d.getHours()) + p(d.getMinutes()) + '.csv';
+}
+function issuesText() {
+  const out = ['VoiceMap test: ' + TOUR, ''];
+  S.rows.forEach((r, i) => { if (hasData(r)) out.push(TRACKS[i] + '\n   ' + detail(r)); });
+  const un = S.rows.map((r, i) => status(r) === 'todo' ? i + 1 : 0).filter(Boolean);
+  if (out.length === 2) out.push('No issues recorded.');
+  if (un.length) out.push('', 'Not checked: tracks ' + un.join(', '));
+  return out.join('\n');
+}
+function download() {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv()], { type: 'text/csv' }));
+  a.download = fileName(); document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  $('msg').textContent = 'File saved to Downloads.';
+}
+$('download').addEventListener('click', download);
+$('share').addEventListener('click', async () => {
+  const f = new File([csv()], fileName(), { type: 'text/csv' });
+  if (navigator.canShare && navigator.canShare({ files: [f] })) {
+    try { await navigator.share({ files: [f], title: 'Lecce VoiceMap test results' }); $('msg').textContent = 'Shared.'; }
+    catch (e) { if (e.name !== 'AbortError') download(); }
+  } else download();
+});
+$('copy').addEventListener('click', async () => {
+  const t = issuesText();
+  try { await navigator.clipboard.writeText(t); $('msg').textContent = 'Copied. Paste it into an email or message.'; }
+  catch (e) {
+    const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (_) {}
+    ta.remove(); $('msg').textContent = ok ? 'Copied. Paste it into an email or message.' : 'Could not copy on this browser.';
+  }
+});
+let resetArmed = false;
+$('reset').addEventListener('click', () => {
+  if (!resetArmed) { resetArmed = true; $('reset').textContent = 'Tap again to erase everything'; return; }
+  S = { cur: 0, units: S.units, rows: TRACKS.map(blank) }; save();
+  resetArmed = false; $('reset').textContent = 'Erase all entries'; $('msg').textContent = 'All entries erased.';
+  renderList(); render();
+});
+
+/* ---------- start ---------- */
+load(); render();
+window.addEventListener('pagehide', save);
+document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
+if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  navigator.serviceWorker.register('sw.js').then(() => navigator.serviceWorker.ready).then(() => {
+    $('offline').textContent = '✓ Ready to use offline.';
+  }).catch(() => { $('offline').textContent = 'Offline use is not set up yet. Open this page once with a connection.'; });
+} else {
+  $('offline').textContent = 'Offline use is not available in this browser.';
+}
+</script>
+</body>
+</html>
