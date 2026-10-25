@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lecce Tour Test Help</title>
+<meta name="theme-color" content="#f3e9d2">
+<link rel="icon" href="icon-192.png">
+<style>
+  :root {
+    --stone: #f3e9d2; --stone-deep: #e6d7b6; --card: #fffaf0;
+    --ink: #1f1a14; --ink-soft: #5c5244; --line: #cdbb94;
+    --accent: #a8401f; --good: #2f6b3a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--stone); color: var(--ink);
+    font: 17px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; padding: calc(12px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom)); }
+  .back {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 22px;
+    border: 1.5px solid var(--ink); color: var(--ink); text-decoration: none; font-weight: 600; font-size: 15px;
+  }
+  h1 { font: 700 30px/1.15 Georgia, "Times New Roman", serif; color: var(--accent); margin: 20px 0 6px; }
+  .lede { color: var(--ink-soft); margin: 0 0 18px; }
+  nav.toc { background: var(--card); border: 1.5px solid var(--line); border-radius: 14px; padding: 10px 16px; margin-bottom: 22px; }
+  nav.toc ol { margin: 0; padding-left: 22px; }
+  nav.toc li { padding: 3px 0; }
+  nav.toc a { color: var(--ink); }
+  section { margin-bottom: 26px; }
+  h2 { font-size: 21px; line-height: 1.25; margin: 0 0 8px; padding-top: 6px; border-top: 1.5px solid var(--line); padding-top: 18px; }
+  h3 { font-size: 17px; margin: 16px 0 4px; }
+  p { margin: 0 0 10px; }
+  ol, ul { margin: 0 0 10px; padding-left: 22px; }
+  li { margin: 4px 0; }
+  .card { background: var(--card); border: 1.5px solid var(--line); border-radius: 14px; padding: 12px 16px; margin: 10px 0; }
+  .note { border-left: 4px solid var(--accent); background: #fbe9df; border-radius: 0 12px 12px 0; padding: 10px 14px; margin: 12px 0; }
+  .ok { border-left-color: var(--good); background: #e5efe2; }
+  b.btn { display: inline-block; padding: 0 7px; border: 1.5px solid var(--ink); border-radius: 7px; font-size: 15px; white-space: nowrap; }
+  table { width: 100%; border-collapse: collapse; font-size: 15.5px; margin: 8px 0 10px; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+  th { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-soft); }
+  a { color: var(--accent); }
+  .foot { color: var(--ink-soft); font-size: 14px; margin-top: 30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./">‹ Back to the app</a>
+
+  <h1>How to use the Lecce Tour Test app</h1>
+  <p class="lede">A phone-friendly, offline version of the VoiceMap test sheet for the tour <i>The southern lady of Baroque</i>. You walk the tour with VoiceMap playing, and record any problems here, one track at a time.</p>
+
+  <nav class="toc" aria-label="Contents">
+    <ol>
+      <li><a href="#install">Install it on your phone</a></li>
+      <li><a href="#check">Check it works offline</a></li>
+      <li><a href="#walk">On the walk</a></li>
+      <li><a href="#issues">Recording an issue</a></li>
+      <li><a href="#list">The All tracks screen</a></li>
+      <li><a href="#send">Sending your results</a></li>
+      <li><a href="#tips">Good to know</a></li>
+    </ol>
+  </nav>
+
+  <section id="install">
+    <h2>1. Install it on your phone</h2>
+    <p>Do this once, on wifi, before the walk. Address: <b>markike78.github.io/lecce-tour-test</b></p>
+    <div class="card">
+      <h3>Android (Chrome)</h3>
+      <ol>
+        <li>Open the address in Chrome.</li>
+        <li>Tap the <b class="btn">⋮</b> menu, then <b>Add to Home screen</b> (it may say <b>Install app</b>).</li>
+      </ol>
+      <h3>Android (Microsoft Edge)</h3>
+      <ol>
+        <li>Open the address in Edge.</li>
+        <li>Tap the <b class="btn">≡</b> menu at the bottom, then <b>Add to phone</b>.</li>
+      </ol>
+      <h3>iPhone (Safari)</h3>
+      <ol>
+        <li>Open the address in <b>Safari</b> (not another browser).</li>
+        <li>Tap the <b>Share</b> button, then <b>Add to Home Screen</b>.</li>
+      </ol>
+    </div>
+    <p>A <b>Lecce Test</b> icon appears on your home screen. Always open the app from that icon.</p>
+  </section>
+
+  <section id="check">
+    <h2>2. Check it works offline</h2>
+    <ol>
+      <li>Open the app from the icon, tap <b class="btn">All tracks</b>, and scroll to the bottom. It should say <b>✓ Ready to use offline</b>.</li>
+      <li>Turn on airplane mode.</li>
+      <li>Enter something on a test track, close the app completely, and reopen it from the icon.</li>
+      <li>If your entry is still there, you're set. Turn airplane mode off.</li>
+      <li>Clear the test entry with <b>Erase all entries</b> at the bottom of All tracks (tap it twice).</li>
+    </ol>
+    <p>Also download the tour in the VoiceMap app before you go, so the audio plays without a signal too.</p>
+  </section>
+
+  <section id="walk">
+    <h2>3. On the walk</h2>
+    <p>The app shows one track per screen, numbered like the test sheet (1 to 44). The bar along the top shows how many you've checked.</p>
+    <ul>
+      <li><b>No problems with this track?</b> Tap the green <b class="btn">All good · next ›</b> button. It's marked as checked and the next track appears.</li>
+      <li><b>Something wrong?</b> Record it (below), then tap <b class="btn">Save · next ›</b>.</li>
+      <li><b class="btn">‹ Back</b> returns to the previous track. You can change any track at any time.</li>
+    </ul>
+    <p>Everything is saved on the phone as you tap. There's no save button to remember, and no signal is needed.</p>
+  </section>
+
+  <section id="issues">
+    <h2>4. Recording an issue</h2>
+    <table>
+      <thead><tr><th>In the app</th><th>When to use it</th></tr></thead>
+      <tbody>
+        <tr><td><b>Audio did not trigger</b><br>(tap to tick)</td><td>The track never started playing at its location.</td></tr>
+        <tr><td><b>Audio late</b><br>move it back by</td><td>The track started after you'd already reached the spot. Estimate how far back it should start.</td></tr>
+        <tr><td><b>Audio early</b><br>move it forward by</td><td>The track started before you got there. Estimate how much later it should start.</td></tr>
+        <tr><td><b>Audio too long</b><br>shorten by</td><td>The audio ran on past where it was useful, such as still talking after the next turn. Seconds to cut.</td></tr>
+        <tr><td><b>Directions unclear</b><br>(tap to tick)</td><td>You weren't sure where to go.</td></tr>
+        <tr><td><b>Notes</b></td><td>Anything else, in your own words.</td></tr>
+      </tbody>
+    </table>
+    <h3>Entering distances and seconds</h3>
+    <p>Use <b class="btn">−</b> and <b class="btn">+</b> to change the number in steps of 5, or tap the number to type an exact value. Rough figures are fine: phone GPS is only accurate to about 5 to 10 metres anyway. Distances are in metres unless you switch to feet on the All tracks screen.</p>
+    <h3>Notes by voice</h3>
+    <p>Tap the Notes box, then the microphone on your keyboard, and speak. For dictation without a signal, download your keyboard's offline language pack before the trip.</p>
+    <h3>Add my GPS position</h3>
+    <p>Adds your current coordinates to the note. Useful for showing exactly where a track <i>should</i> have started: stand on that spot and tap it. The phone may ask for location permission the first time.</p>
+  </section>
+
+  <section id="list">
+    <h2>5. The All tracks screen</h2>
+    <p>Tap <b class="btn">All tracks</b> at the top to see every track:</p>
+    <ul>
+      <li><b style="color:var(--good)">✓ green</b>: checked, all good</li>
+      <li><b style="color:var(--accent)">! red</b>: issue recorded, with a summary underneath</li>
+      <li>empty circle: not checked yet</li>
+    </ul>
+    <p>Tap any track to jump to it. This screen also has the metres/feet switch and the buttons for sending results.</p>
+  </section>
+
+  <section id="send">
+    <h2>6. Sending your results</h2>
+    <p>On the All tracks screen:</p>
+    <ul>
+      <li><b class="btn">Send results file</b> opens your phone's share options (email, messaging, Drive, OneDrive and so on) with a spreadsheet file (CSV) attached.</li>
+      <li><b class="btn">Save file to phone</b> saves the same file to your Downloads.</li>
+      <li><b class="btn">Copy issues as text</b> copies a plain-text list of just the problems, ready to paste into an email or message.</li>
+    </ul>
+    <p>The file has the same columns as the printed test sheet, plus a <b>TESTED</b> column showing which tracks you actually walked. It opens in Excel or Google Sheets.</p>
+    <div class="note ok">Send yourself the file once or twice during the walk as a backup. Without a signal, an email waits in your outbox until you're back online.</div>
+  </section>
+
+  <section id="tips">
+    <h2>7. Good to know</h2>
+    <ul>
+      <li><b>Your entries live only on your phone.</b> If two people test, each sends their own results.</li>
+      <li><b>Stick to one browser and the home-screen icon.</b> Entries made in a browser tab don't appear in the installed app, and vice versa.</li>
+      <li><b>Don't clear the browser's data for this site</b> before you've sent your results; that would erase your entries.</li>
+      <li><b>If the app is updated,</b> the new version arrives the next time you open it with a connection (sometimes one more reopen is needed). Your entries are kept.</li>
+      <li>If you see <b>"Warning: this browser is not saving entries"</b>, you're probably in a private/incognito tab. Open the app from the home-screen icon instead.</li>
+    </ul>
+  </section>
+
+  <p class="foot"><a href="./">‹ Back to the app</a></p>
+</div>
+</body>
+</html>

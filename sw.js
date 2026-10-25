@@ -1,6 +1,6 @@
 // Offline cache for the Lecce tour test app. Bump VERSION when files change.
-const VERSION = 'lecce-test-v1';
-const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
+const VERSION = 'lecce-test-v2';
+const FILES = ['./', './index.html', './help.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));

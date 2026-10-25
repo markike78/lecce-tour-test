@@ -46,6 +46,8 @@
     min-height: 44px; padding: 0 16px; border-radius: 22px;
     border: 1.5px solid var(--ink); background: transparent; font-weight: 600; font-size: 15px;
   }
+  .help-btn { display: inline-grid; place-items: center; width: 44px; padding: 0; color: var(--ink); text-decoration: none; font-size: 19px; }
+  .foot a { color: var(--accent); font-weight: 600; }
   .bar { height: 5px; background: var(--stone-deep); margin: 0 14px; border-radius: 3px; overflow: hidden; }
   .bar i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .2s; }
 
@@ -154,6 +156,7 @@
 <div class="app" id="app">
   <div class="top">
     <div class="count" id="count"></div>
+    <a class="pill-btn help-btn" href="help.html" aria-label="How to use this app">?</a>
     <button class="pill-btn" id="openList">All tracks</button>
   </div>
   <div class="bar"><i id="bar"></i></div>
@@ -241,6 +244,7 @@
     <button class="danger" id="reset">Erase all entries</button>
     <div class="foot" id="offline">Checking offline status…</div>
     <div class="foot">Entries are saved on this phone as you tap. Send or save the file now and then as a backup.</div>
+    <div class="foot"><a href="help.html">How to use this app</a></div>
   </div>
 </div>
 
